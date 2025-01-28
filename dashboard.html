@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Storage</title>
+</head>
+<body>
+    <h2>Cloud Storage</h2>
+    <div id="fileList"></div>
+    <script>
+        // Files stored in GitHub repository (replace with actual file URLs)
+        const fileLinks = [
+            "https://github.com/your-username/your-repo-name/raw/main/file1.jpg", // Replace with your file URLs
+            "https://github.com/your-username/your-repo-name/raw/main/file2.pdf"  // Replace with your file URLs
+        ];
+
+        const fileList = document.getElementById('fileList');
+        fileLinks.forEach(fileLink => {
+            const link = document.createElement('a');
+            link.href = fileLink;
+            link.textContent = fileLink;
+            link.target = "_blank";
+            fileList.appendChild(link);
+            fileList.appendChild(document.createElement('br'));
+        });
+    </script>
+</body>
+</html>
