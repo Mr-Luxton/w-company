@@ -3,96 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login with Auth0</title>
+    <title>Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f4f8;
+            color: #333;
         }
-        .container {
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
             text-align: center;
+            color: #4CAF50;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
         }
         button {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
+            width: 100%;
+            padding: 10px;
             background-color: #4CAF50;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
         button:hover {
             background-color: #45a049;
         }
+        .error {
+            color: red;
+            text-align: center;
+        }
+        .toggle-password {
+            background-color: transparent;
+            border: none;
+            color: #4CAF50;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: -5px;
+            float: right;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Login with Auth0</h1>
-        <div id="welcomeMessage"></div>
-        <button id="loginButton" onclick="login()">Login</button>
-        <button id="logoutButton" style="display:none" onclick="logout()">Logout</button>
-    </div>
 
-    <script>
-        // Replace with your Auth0 domain and client ID
-        const auth0Domain = 'dev-j840iz1jpkaqfjfh.us.auth0.com'; // e.g., 'dev-abc123.auth0.com'
-        const auth0ClientID = 'Uxo3DMd52I7rgyLu6wJF2PJPocB3RF4x'; // Your Auth0 client ID
+<div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <label for="username">Username</label>
+        <input type="text" id="username" required placeholder="Enter your username">
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="Enter your password">
+        <button type="button" class="toggle-password" id="togglePassword">Show</button>
 
-        let auth0 = null;
+        <button type="submit">Login</button>
+    </form>
+    <p class="error" id="errorMessage"></p>
+</div>
 
-        // Initialize Auth0
-        async function initializeAuth0() {
-            auth0 = await createAuth0Client({
-                domain: auth0Domain,
-                client_id: auth0ClientID,
-                redirect_uri: window.location.href,
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    // Toggle password visibility
+    togglePassword.addEventListener('click', function () {
+        // Toggle the type between 'password' and 'text'
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+        togglePassword.textContent = type === 'password' ? 'Show' : 'Hide';
+    });
+
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Fetch the users.json file from GitHub
+        fetch('https://raw.githubusercontent.com/your-username/your-repo-name/main/users.json')
+            .then(response => response.json())
+            .then(users => {
+                // Check if the username and password match any in the users list
+                const user = users.find(user => user.username === username && user.password === password);
+
+                if (user) {
+                    window.location.href = 'dashboard.html';  // Redirect to dashboard page on success
+                } else {
+                    errorMessage.textContent = 'Invalid username or password. Please try again.';  // Display error message
+                }
+            })
+            .catch(error => {
+                console.error('Error loading users.json:', error);
+                errorMessage.textContent = 'An error occurred. Please try again later.';
             });
-        }
+    });
+</script>
 
-        // Handle login
-        async function login() {
-            await auth0.loginWithRedirect();
-        }
-
-        // Handle logout
-        async function logout() {
-            auth0.logout({
-                returnTo: window.location.href,
-            });
-        }
-
-        // Check if the user is authenticated
-        async function checkAuth() {
-            const isAuthenticated = await auth0.isAuthenticated();
-
-            if (isAuthenticated) {
-                const user = await auth0.getUser();
-                document.getElementById('welcomeMessage').innerHTML = `Welcome, ${user.name}!`;
-                document.getElementById('loginButton').style.display = 'none';
-                document.getElementById('logoutButton').style.display = 'block';
-            } else {
-                document.getElementById('loginButton').style.display = 'block';
-                document.getElementById('logoutButton').style.display = 'none';
-            }
-        }
-
-        // Call initializeAuth0 and check if the user is logged in
-        window.onload = async () => {
-            await initializeAuth0();
-            await checkAuth();
-
-            // If we have a redirect after login, handle it
-            if (window.location.search.includes('code=') && window.location.search.includes('state=')) {
-                await auth0.handleRedirectCallback();
-                window.history.replaceState({}, document.title, window.location.pathname);
-                await checkAuth();
-            }
-        };
-    </script>
 </body>
 </html>
