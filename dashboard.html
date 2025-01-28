@@ -4,26 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h2 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .file-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .file-list li {
+            background-color: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .file-list li a {
+            flex-grow: 1;
+        }
+    </style>
 </head>
 <body>
-    <h2>Cloud Storage</h2>
-    <div id="fileList"></div>
-    <script>
-        // Files stored in GitHub repository (replace with actual file URLs)
-        const fileLinks = [
-            "https://github.com/your-username/your-repo-name/raw/main/file1.jpg", // Replace with your file URLs
-            "https://github.com/your-username/your-repo-name/raw/main/file2.pdf"  // Replace with your file URLs
-        ];
 
-        const fileList = document.getElementById('fileList');
-        fileLinks.forEach(fileLink => {
-            const link = document.createElement('a');
-            link.href = fileLink;
-            link.textContent = fileLink;
-            link.target = "_blank";
-            fileList.appendChild(link);
-            fileList.appendChild(document.createElement('br'));
-        });
-    </script>
+<h2>Cloud Storage</h2>
+
+<div>
+    <ul class="file-list" id="fileList">
+        <!-- Files will be listed here -->
+    </ul>
+</div>
+
+<script>
+    // List of files stored in GitHub (replace with actual file URLs)
+    const fileLinks = [
+        "https://github.com/your-username/your-repo-name/raw/main/file1.jpg", // Replace with your file URLs
+        "https://github.com/your-username/your-repo-name/raw/main/file2.pdf"  // Replace with your file URLs
+    ];
+
+    const fileList = document.getElementById('fileList');
+    
+    // Loop through the file links and create list items
+    fileLinks.forEach(fileLink => {
+        const listItem = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = fileLink;
+        link.textContent = fileLink;
+        link.target = "_blank";  // Open the file in a new tab
+        listItem.appendChild(link);
+        fileList.appendChild(listItem);
+    });
+</script>
+
 </body>
 </html>
