@@ -53,6 +53,15 @@
             color: red;
             text-align: center;
         }
+        .toggle-password {
+            background-color: transparent;
+            border: none;
+            color: #4CAF50;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: -5px;
+            float: right;
+        }
     </style>
 </head>
 <body>
@@ -65,7 +74,8 @@
         
         <label for="password">Password</label>
         <input type="password" id="password" required placeholder="Enter your password">
-        
+        <button type="button" class="toggle-password" id="togglePassword">Show</button>
+
         <button type="submit">Login</button>
     </form>
     <p class="error" id="errorMessage"></p>
@@ -74,6 +84,16 @@
 <script>
     const loginForm = document.getElementById('loginForm');
     const errorMessage = document.getElementById('errorMessage');
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    // Toggle password visibility
+    togglePassword.addEventListener('click', function () {
+        // Toggle the type between 'password' and 'text'
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+        togglePassword.textContent = type === 'password' ? 'Show' : 'Hide';
+    });
 
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -82,7 +102,7 @@
         const password = document.getElementById('password').value;
 
         // Fetch the users.json file from GitHub
-        fetch('https://raw.githubusercontent.com/your-username/your-repo-name/main/users.json')
+        fetch('https://raw.githubusercontent.com/Mr-Luxton/w-company/refs/heads/main/users.json')
             .then(response => response.json())
             .then(users => {
                 // Check if the username and password match any in the users list
